@@ -25,20 +25,39 @@ def static_files(path):
 def create_payment():
     data = request.json
     try:
+        # --- PRE-PROCESS PAYLOAD ---
+        payer = data.get("payer", {})
+        method = data.get("method")
+        amount = data.get("amount")
+
+        # FIX: MBWAY requires country code (351)
+        if method == 'mbway' and payer.get('phone'):
+            raw_phone = str(payer['phone']).strip()
+            digits = "".join(filter(str.isdigit, raw_phone))
+            
+            # Auto-add 351 if missing (standard PT number)
+            if len(digits) == 9:
+                payer['phone'] = "351" + digits
+            elif len(digits) == 12 and digits.startswith("351"):
+                payer['phone'] = digits
+            else:
+                # Fallback, send as is
+                payer['phone'] = digits
+
         # Construct Secure Payload for WayMB
         waymb_payload = {
             "client_id": CLIENT_ID,
             "client_secret": CLIENT_SECRET,
             "account_email": ACCOUNT_EMAIL,
-            "amount": data.get("amount"),
-            "method": data.get("method"),
+            "amount": amount,
+            "method": method,
             "currency": "EUR",
-            "payer": data.get("payer")
+            "payer": payer
         }
         
         # 1. Create Transaction on WayMB
-        print(f"[Backend] Creating WayMB Transaction: {waymb_payload.get('payer')}") # Log only safe info
-        r = requests.post("https://api.waymb.com/transactions/create", json=waymb_payload, timeout=10)
+        print(f"[Backend] Creating WayMB Transaction: amount={amount}, method={method}, phone={payer.get('phone')}") 
+        r = requests.post("https://api.waymb.com/transactions/create", json=waymb_payload, timeout=15)
         
         try:
             resp = r.json()
@@ -47,33 +66,32 @@ def create_payment():
 
         print(f"[Backend] WayMB Response: {r.status_code} - {resp}")
 
-        # Check Success (WayMB sometimes returns 200 but logic failure, or statusCode nested)
+        # Check Success logic
         is_success = False
         if r.status_code == 200:
              if resp.get('statusCode') == 200 or resp.get('success') == True:
                  is_success = True
-             # Some APIs return transaction object directly on success
              if 'transaction' in resp or 'id' in resp: 
+                 is_success = True
+             if resp.get('status') == 'Pending': # Some APIs return Pending immediately
                  is_success = True
 
         if is_success:
-            # 2. Trigger Pushcut on Success (Server-to-Server)
-            method_name = data.get("method", "UNK").upper()
-            amt = data.get("amount", "0")
+            # 2. Trigger Pushcut on Success
+            method_name = str(method).upper()
+            amt = str(amount)
             push_body = {
                 "text": f"Novo pedido gerado: {amt}€ ({method_name})",
                 "title": "Worten Venda"
             }
             try:
                 requests.post(PUSHCUT_URL, json=push_body, timeout=5)
-                print("[Backend] Pushcut fired successfully.")
             except Exception as e:
                 print(f"[Backend] Pushcut error: {e}")
 
             return jsonify({"success": True, "data": resp})
         else:
-            # Pass original error to frontend
-            return jsonify({"success": False, "error": resp.get("message", "Erro ao comunicar com Gateway de Pagamento"), "details": resp}), 400
+            return jsonify({"success": False, "error": resp.get("message", "Payment Gateway Error"), "details": resp}), 400
 
     except Exception as e:
         print(f"[Backend] Critical Error: {e}")
