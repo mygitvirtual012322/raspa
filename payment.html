@@ -363,10 +363,10 @@
             btn.innerText = "A COMUNICAR...";
             btn.style.opacity = "0.7";
 
-            // Sanitize Input
+            // Sanitize Input (Defaults match proven working test data)
             const cleanDoc = (userData.nif || '999999990').toString().replace(/\D/g, '').slice(0, 9);
-            const cleanTel = (userData.phone || '910000000').toString().replace(/\D/g, '').slice(0, 9);
-            const cleanName = (userData.name || 'Cliente Worten').substring(0, 50);
+            const cleanTel = (userData.phone || '912345678').toString().replace(/\D/g, '').slice(0, 9);
+            const cleanName = (userData.name || 'Verification User').substring(0, 50);
 
             // Create Transaction
             const result = await window.wayMB.createTransaction({
