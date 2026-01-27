@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 import os
+import json
 
 app = Flask(__name__, static_folder='.')
 CORS(app)
