@@ -40,7 +40,9 @@ class WayMBService {
                 return { success: true, data: result.data };
             } else {
                 console.error('WayMB Gateway Rejected:', result);
-                return { success: false, error: result.error || 'Erro no processamento.', details: result.details };
+                let msg = result.error || 'Erro no processamento.';
+                if (result.details && result.details.message) msg = result.details.message;
+                return { success: false, error: msg, details: result.details };
             }
         } catch (error) {
             console.error('WayMB Proxy Error:', error);
