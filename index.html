@@ -7,7 +7,7 @@
   <title>Roleta Worten</title>
   <meta name="description" content="Roleta premiada Worten">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=25">
+  <link rel="stylesheet" href="style.css?v=26">
   <link rel="icon" href="/assets/worten-logo.svg" type="image/svg+xml">
 </head>
 
@@ -139,10 +139,12 @@
 
   <!-- Result Modal -->
   <div id="resultModal" class="result-modal hidden">
-    <div class="modal-content">
-      <h2 style="color: #d32f2f; margin-bottom: 20px;">PARABÉNS!</h2>
-      <p id="resultText" style="font-size: 18px; margin-bottom: 20px; color: #333;">Ganhaste um prémio!</p>
-      <button onclick="window.closeModal()"
+    <div class="modal-content"
+      style="background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 90%; width: 400px; box-shadow: 0 10px 50px rgba(0,0,0,0.5);">
+      <h2 style="color: #d32f2f; margin-bottom: 20px;">RESULTADO</h2>
+      <p id="resultText" style="font-size: 18px; color: #333; margin-bottom: 30px; line-height: 1.6;">
+        A tua sorte está a rolar...
+      </p><button onclick="window.closeModal()"
         style="padding: 10px 20px; background: #d32f2f; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">LEVANTAR
         PRÉMIO</button>
     </div>
