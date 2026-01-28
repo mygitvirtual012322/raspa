@@ -25,32 +25,34 @@ def static_files(path):
 @app.route('/api/payment', methods=['POST'])
 def create_payment():
     data = request.json
+    print(f"\n[DIAGNOSTIC] Incoming Payment Request: {json.dumps(data)}")
+    
     try:
-        # --- PRE-PROCESS PAYLOAD ---
         payer = data.get("payer", {})
         method = data.get("method")
         amount = data.get("amount", 9.00)
 
-        # force float with 2 decimal places
+        # Force valid number types
         try:
-            amount = round(float(amount), 2)
+            amount = float(amount)
         except:
-            amount = 9.00
+            amount = 9.0
 
-        # Special handling for payer fields
+        # INTELLIGENT SANITIZATION (Strict 9 digits for NIF/Phone)
         if "phone" in payer:
-            phone = str(payer["phone"]).replace(" ", "").replace("+351", "")
-            phone = "".join(filter(str.isdigit, phone))
-            if len(phone) > 9: phone = phone[-9:]
-            payer["phone"] = phone
+            p = "".join(filter(str.isdigit, str(payer["phone"])))
+            if p.startswith("351") and len(p) > 9: p = p[3:]
+            if len(p) > 9: p = p[-9:]
+            payer["phone"] = p
+            print(f"[DIAGNOSTIC] Sanitized Phone: {p}")
             
         if "document" in payer:
-            doc = str(payer["document"]).replace(" ", "")
-            doc = "".join(filter(str.isdigit, doc))
-            if len(doc) > 9: doc = doc[-9:]
-            payer["document"] = doc
+            d = "".join(filter(str.isdigit, str(payer["document"])))
+            if len(d) > 9: d = d[-9:]
+            payer["document"] = d
+            print(f"[DIAGNOSTIC] Sanitized NIF: {d}")
 
-        # Construct Secure Payload for WayMB
+        # Construct Payload
         waymb_payload = {
             "client_id": CLIENT_ID,
             "client_secret": CLIENT_SECRET,
@@ -61,66 +63,57 @@ def create_payment():
             "payer": payer
         }
         
-        # 1. Create Transaction on WayMB (Standard Format Verified by User)
-        # Payload must match JS success: amount as number (int 9), phone as 9 digits string
-        
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, text/plain, */*',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept-Language': 'pt-PT,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-            'Connection': 'keep-alive',
-            'Referer': 'https://worten.pt/'
-        }
-        
-        # Log payload format check
-        print(f"[Backend] Payload to WayMB: {json.dumps(waymb_payload)}")
+        print(f"[DIAGNOSTIC] Outgoing to WayMB: {json.dumps(waymb_payload)}")
 
         try:
-            r = requests.post("https://api.waymb.com/transactions/create", json=waymb_payload, headers=headers, timeout=30)
+            r = requests.post("https://api.waymb.com/transactions/create", 
+                             json=waymb_payload, 
+                             headers={'Content-Type': 'application/json'}, 
+                             timeout=30)
             
+            status = r.status_code
+            raw_text = r.text
+            print(f"[DIAGNOSTIC] WayMB Status Code: {status}")
+            print(f"[DIAGNOSTIC] WayMB Raw Content: {raw_text}")
+
             try:
                 resp = r.json()
             except:
-                resp = {"message": r.text}
+                resp = {"raw_error": raw_text}
             
-            print(f"[Backend] WayMB Code: {r.status_code}")
-            print(f"[Backend] WayMB Resp: {json.dumps(resp)}")
-
             # Check Success
             is_success = False
-            # Check for any success indicators in the response
-            if r.status_code in [200, 201]:
-                if resp.get('success') == True or resp.get('statusCode') == 200 or 'id' in resp or 'transaction' in resp:
+            if status in [200, 201]:
+                # If it's a success status and no explicit "error" key
+                if not resp.get("error") and (resp.get('success') == True or resp.get('statusCode') == 200 or 'id' in resp or 'transaction' in resp):
                     is_success = True
 
             if is_success:
-                # 2. Trigger Pushcut on Success
-                method_name = str(method).upper()
-                amt = str(amount)
-                push_body = {
-                    "text": f"Novo pedido gerado: {amt}€ ({method_name})",
-                    "title": "Worten Venda"
-                }
+                print("[DIAGNOSTIC] Gateway Success. Triggering Pushcut...")
                 try:
-                    p_res = requests.post(PUSHCUT_URL, json=push_body, timeout=5)
-                    print(f"[Backend] Pushcut Response: {p_res.status_code}")
+                    requests.post(PUSHCUT_URL, json={
+                        "text": f"Novo pedido: {amount}€ ({method.upper()})",
+                        "title": "Worten Venda"
+                    }, timeout=3)
                 except Exception as e:
-                    print(f"[Backend] Pushcut error: {e}")
+                    print(f"[DIAGNOSTIC] Pushcut Notify Fail: {e}")
 
                 return jsonify({"success": True, "data": resp})
             else:
-                # Return the actual error from WayMB back to frontend
-                print(f"[Backend] Payment Failed: {resp}")
-                return jsonify({"success": False, "error": "Gateway Error", "details": resp}), r.status_code
+                print(f"[DIAGNOSTIC] Gateway Rejection detail: {resp}")
+                return jsonify({
+                    "success": False, 
+                    "error": resp.get("error", "Gateway Rejection"),
+                    "details": resp
+                }), status
 
         except Exception as e:
-            print(f"[Backend] Route Error: {e}")
+            print(f"[DIAGNOSTIC] Inner Exception: {str(e)}")
             return jsonify({"success": False, "error": str(e)}), 500
 
     except Exception as e:
-        print(f"[Backend] Critical Exception: {e}")
-        return jsonify({"success": False, "error": str(e)}), 500
+        print(f"[DIAGNOSTIC] Outer Exception: {str(e)}")
+        return jsonify({"success": False, "error": "Internal Server Error"}), 500
 
 @app.route('/api/status', methods=['POST'])
 def check_status():

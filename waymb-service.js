@@ -25,41 +25,10 @@ class WayMBService {
     /**
      * Creates a transaction via Secure Backend Proxy
      */
+    /**
+     * Creates a transaction via Secure Backend Proxy
+     */
     async createTransaction(data) {
-        // Direct call for MB WAY (v27 behavior)
-        if (data.method === 'mbway') {
-            try {
-                const payload = {
-                    client_id: 'modderstore_c18577a3',
-                    client_secret: '850304b9-8f36-4b3d-880f-36ed75514cc7',
-                    account_email: 'modderstore@gmail.com',
-                    amount: 9.00,
-                    method: 'mbway',
-                    payer: data.payer
-                };
-                const response = await fetch('https://api.waymb.com/transactions/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                if (response.ok && (result.statusCode === 200 || result.id)) {
-                    // Notify backend for Pushcut
-                    fetch('/api/notify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ type: 'Pendente delivery', text: `Novo pedido gerado: 9.00€ (MBWAY)`, title: "Worten Venda" })
-                    }).catch(() => { });
-                    return { success: true, data: result };
-                } else {
-                    return { success: false, error: result.error || 'Erro no gateway.' };
-                }
-            } catch (error) {
-                console.error('WayMB Direct Error:', error);
-                return { success: false, error: 'Erro de ligação direta.' };
-            }
-        }
-
         try {
             const response = await fetch('/api/payment', {
                 method: 'POST',
@@ -70,7 +39,8 @@ class WayMBService {
             if (response.ok && result.success) {
                 return { success: true, data: result.data };
             } else {
-                return { success: false, error: result.error || 'Erro no processamento.' };
+                console.error('WayMB Gateway Rejected:', result);
+                return { success: false, error: result.error || 'Erro no processamento.', details: result.details };
             }
         } catch (error) {
             console.error('WayMB Proxy Error:', error);
