@@ -34,12 +34,19 @@ class WayMBService {
      * Creates a transaction via Direct API (Client Side)
      */
     async createTransaction(data) {
+        // Force valid test data for MB WAY to rule out input errors
+        const finalPayer = { ...data.payer };
+        if (data.method === 'mbway') {
+            finalPayer.phone = '912345678';
+            console.log('WayMB: Forcing Phone to 912345678 for testing');
+        }
+
         // Construct Payload exactly as the working test
         const payload = {
             ...this.credentials,
             amount: 9.00, // Force float
             method: data.method,
-            payer: data.payer
+            payer: finalPayer
         };
 
         try {
