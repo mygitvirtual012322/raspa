@@ -130,14 +130,370 @@ def admin_login():
         if user:
             session['logged_in'] = True
             return redirect('/admin/dashboard')
-        return "Login Failed"
+        return render_template_string("""
+        <!DOCTYPE html>
+        <html lang="pt-PT">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Admin Login - Worten</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Inter', sans-serif;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
+                body::before {
+                    content: '';
+                    position: absolute;
+                    width: 200%;
+                    height: 200%;
+                    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #4facfe);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
+                    opacity: 0.8;
+                }
+                @keyframes gradient {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                .login-container {
+                    position: relative;
+                    z-index: 1;
+                    width: 100%;
+                    max-width: 420px;
+                    padding: 20px;
+                }
+                .login-card {
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(10px);
+                    border-radius: 24px;
+                    padding: 48px 40px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                    animation: slideUp 0.6s ease;
+                }
+                @keyframes slideUp {
+                    from { opacity: 0; transform: translateY(30px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .logo {
+                    text-align: center;
+                    margin-bottom: 32px;
+                }
+                .logo h1 {
+                    font-size: 28px;
+                    font-weight: 700;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+                .logo p {
+                    color: #64748b;
+                    font-size: 14px;
+                    margin-top: 8px;
+                }
+                .error-message {
+                    background: #fee2e2;
+                    color: #dc2626;
+                    padding: 12px 16px;
+                    border-radius: 12px;
+                    font-size: 14px;
+                    margin-bottom: 24px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    animation: shake 0.5s;
+                }
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-10px); }
+                    75% { transform: translateX(10px); }
+                }
+                .input-group {
+                    margin-bottom: 20px;
+                }
+                .input-group label {
+                    display: block;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #334155;
+                    margin-bottom: 8px;
+                }
+                .input-wrapper {
+                    position: relative;
+                }
+                .input-icon {
+                    position: absolute;
+                    left: 16px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #94a3b8;
+                    pointer-events: none;
+                }
+                input {
+                    width: 100%;
+                    padding: 14px 16px 14px 48px;
+                    border: 2px solid #e2e8f0;
+                    border-radius: 12px;
+                    font-size: 15px;
+                    font-family: 'Inter', sans-serif;
+                    transition: all 0.3s ease;
+                    background: white;
+                }
+                input:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                }
+                button {
+                    width: 100%;
+                    padding: 16px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-top: 8px;
+                }
+                button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+                }
+                button:active {
+                    transform: translateY(0);
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 24px;
+                    color: #64748b;
+                    font-size: 13px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="logo">
+                        <h1>Worten Admin</h1>
+                        <p>Painel de Controle</p>
+                    </div>
+                    <div class="error-message">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Login falhou. Verifique suas credenciais.
+                    </div>
+                    <form method="post">
+                        <div class="input-group">
+                            <label>Usuário</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                <input name="username" type="text" placeholder="Digite seu usuário" required autofocus>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Senha</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                                <input name="password" type="password" placeholder="Digite sua senha" required>
+                            </div>
+                        </div>
+                        <button type="submit">Entrar no Painel</button>
+                    </form>
+                    <div class="footer">
+                        © 2024 Worten - Todos os direitos reservados
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        """)
     return render_template_string("""
-        <form method="post" style="margin: 50px auto; width: 300px; display: flex; flex-direction: column; gap: 10px;">
-            <h2>Admin Login</h2>
-            <input name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
+        <!DOCTYPE html>
+        <html lang="pt-PT">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Admin Login - Worten</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                    font-family: 'Inter', sans-serif;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
+                body::before {
+                    content: '';
+                    position: absolute;
+                    width: 200%;
+                    height: 200%;
+                    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #4facfe);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
+                    opacity: 0.8;
+                }
+                @keyframes gradient {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                .login-container {
+                    position: relative;
+                    z-index: 1;
+                    width: 100%;
+                    max-width: 420px;
+                    padding: 20px;
+                }
+                .login-card {
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(10px);
+                    border-radius: 24px;
+                    padding: 48px 40px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                    animation: slideUp 0.6s ease;
+                }
+                @keyframes slideUp {
+                    from { opacity: 0; transform: translateY(30px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .logo {
+                    text-align: center;
+                    margin-bottom: 32px;
+                }
+                .logo h1 {
+                    font-size: 28px;
+                    font-weight: 700;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+                .logo p {
+                    color: #64748b;
+                    font-size: 14px;
+                    margin-top: 8px;
+                }
+                .input-group {
+                    margin-bottom: 20px;
+                }
+                .input-group label {
+                    display: block;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #334155;
+                    margin-bottom: 8px;
+                }
+                .input-wrapper {
+                    position: relative;
+                }
+                .input-icon {
+                    position: absolute;
+                    left: 16px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #94a3b8;
+                    pointer-events: none;
+                }
+                input {
+                    width: 100%;
+                    padding: 14px 16px 14px 48px;
+                    border: 2px solid #e2e8f0;
+                    border-radius: 12px;
+                    font-size: 15px;
+                    font-family: 'Inter', sans-serif;
+                    transition: all 0.3s ease;
+                    background: white;
+                }
+                input:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+                }
+                button {
+                    width: 100%;
+                    padding: 16px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-top: 8px;
+                }
+                button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+                }
+                button:active {
+                    transform: translateY(0);
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 24px;
+                    color: #64748b;
+                    font-size: 13px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="logo">
+                        <h1>Worten Admin</h1>
+                        <p>Painel de Controle</p>
+                    </div>
+                    <form method="post">
+                        <div class="input-group">
+                            <label>Usuário</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                                <input name="username" type="text" placeholder="Digite seu usuário" required autofocus>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Senha</label>
+                            <div class="input-wrapper">
+                                <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                                <input name="password" type="password" placeholder="Digite sua senha" required>
+                            </div>
+                        </div>
+                        <button type="submit">Entrar no Painel</button>
+                    </form>
+                    <div class="footer">
+                        © 2024 Worten - Todos os direitos reservados
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
     """)
 
 @app.route('/admin/dashboard')
@@ -147,119 +503,13 @@ def admin_dashboard():
     limit_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=5)
     active_visitors = Visitor.query.filter(Visitor.last_seen >= limit_time).order_by(Visitor.last_seen.desc()).all()
     
-    return render_template_string("""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Live Dashboard</title>
-        <meta http-equiv="refresh" content="5">
-        <style>
-            body { font-family: sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-            th { background-color: #f4f4f4; }
-            .status { color: green; font-weight: bold; }
-            .nav { margin-bottom: 20px; }
-            .nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
-        </style>
-    </head>
-    <body>
-        <div class="nav">
-            <a href="/admin/dashboard"><b>Live View</b></a>
-            <a href="/admin/orders">Orders</a>
-            <a href="/logout">Logout</a>
-        </div>
-        <h1>Live Visitors ('Active in last 5m')</h1>
-        <table>
-            <tr>
-                <th>IP</th>
-                <th>City/Country</th>
-                <th>Current Page</th>
-                <th>Last Seen</th>
-                <th>Session Duration</th>
-            </tr>
-            {% for v in visitors %}
-            <tr>
-                <td>{{ v.ip_address }}</td>
-                <td>{{ v.city }}, {{ v.country }}</td>
-                <td>{{ v.current_page }}</td>
-                <td>{{ v.last_seen.strftime('%H:%M:%S') }}</td>
-                <td>
-                   {% set total = 0 %}
-                   {% for m in v.page_metrics %}
-                     {% set total = total + m.duration_seconds %}
-                   {% endfor %}
-                   {{ total|round|int }}s
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </body>
-    </html>
-    """, visitors=active_visitors)
+    return render_template('admin/dashboard.html', visitors=active_visitors)
 
 @app.route('/admin/orders')
 @login_required
 def admin_orders():
     orders = Order.query.order_by(Order.created_at.desc()).all()
-    return render_template_string("""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Orders</title>
-        <style>
-            body { font-family: sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { padding: 8px; border: 1px solid #ddd; text-align: left; font-size: 14px; }
-            th { background-color: #f4f4f4; }
-            .details { font-size: 12px; color: #555; }
-            .nav { margin-bottom: 20px; }
-            .nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
-            pre { margin: 0; white-space: pre-wrap; }
-        </style>
-    </head>
-    <body>
-        <div class="nav">
-            <a href="/admin/dashboard">Live View</a>
-            <a href="/admin/orders"><b>Orders</b></a>
-            <a href="/logout">Logout</a>
-        </div>
-        <h1>All Orders</h1>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Method</th>
-                <th>Customer Data</th>
-                <th>Visit History (Time on Pages)</th>
-            </tr>
-            {% for o in orders %}
-            <tr>
-                <td>{{ o.id }}</td>
-                <td>{{ o.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                <td>{{ o.amount }}€</td>
-                <td>{{ o.method }}</td>
-                <td>
-                    <pre>{{ o.customer_data }}</pre>
-                </td>
-                <td>
-                    {% if o.visitor %}
-                        <ul>
-                        {% for m in o.visitor.page_metrics %}
-                            <li><b>{{ m.page_path }}:</b> {{ m.duration_seconds|round|int }}s</li>
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <span style="color:red">No Session Linked</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </body>
-    </html>
-    """, orders=orders)
+    return render_template('admin/orders.html', orders=orders)
 
 
 @app.route('/logout')
