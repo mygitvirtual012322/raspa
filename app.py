@@ -770,12 +770,26 @@ def mbway_webhook():
         tx_id = data.get("id") or data.get("transaction_id")
         order = None
         
+        # === INSTASPT FILTER (12.90 EUR) ===
+        if abs(amount - 12.90) < 0.01:
+            # InstaSpy payment - notify and skip Worten logic
+            log(f"InstaSpy payment detected: {amount}€")
+            requests.post(
+                "https://api.pushcut.io/XPTr5Kloj05Rr37Saz0D1/notifications/Aprovado%20delivery",
+                json={
+                    "text": f"Pagamento InstaSpy: {amount}€\nID: {tx_id or 'N/A'}",
+                    "title": "InstaSpy - Pagamento Confirmado"
+                },
+                timeout=4
+            )
+            return jsonify({"status": "received", "project": "InstaSpy"}), 200
+        
+        # === WORTEN LOGIC (original) ===
         if tx_id:
             order = Order.query.filter_by(checkout_id=str(tx_id)).first()
             
         # Fallback: Match by amount + OPEN status (last 30m)
         if not order and amount > 0:
-            # recent orders matching amount
             order = Order.query.filter(
                 Order.amount == amount, 
                 Order.status != "PAID",
@@ -786,11 +800,8 @@ def mbway_webhook():
             order.status = "PAID"
             db.session.commit()
             log(f"Order #{order.id} marked as PAID via Webhook")
-            
-            # Use order flow for notification
             flow = order.flow
         else:
-            # Fallback flow deduction
             flow = "root" if abs(amount - 12.49) < 0.01 else "promo"
         
         if flow == "root":
@@ -800,13 +811,12 @@ def mbway_webhook():
         
         msg_text = f"Pagamento Confirmado: {amount}€" if amount > 0 else "Pagamento MBWAY Recebido!"
         
-        # Only notify if we haven't already (optional logic, but for now just notify)
         requests.post(target_pushcut, json={
             "text": msg_text, 
             "title": "Worten Sucesso"
         }, timeout=4)
         
-        return jsonify({"status": "received"}), 200
+        return jsonify({"status": "received", "project": "Worten"}), 200
 
     except Exception as e:
         log(f"Webhook Error: {str(e)}")
