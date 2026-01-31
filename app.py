@@ -766,29 +766,26 @@ def mbway_webhook():
             try: amount = float(data["valor"])
             except: pass
             
-        # Try to match Order by ID (if provided)
         tx_id = data.get("id") or data.get("transaction_id")
-        order = None
         
         # === INSTASPT FILTER (12.90 EUR) ===
         if abs(amount - 12.90) < 0.01:
-            # InstaSpy payment - notify and skip Worten logic
             log(f"InstaSpy payment detected: {amount}€")
             requests.post(
-                "https://api.pushcut.io/XPTr5Kloj05Rr37Saz0D1/notifications/Aprovado%20delivery",
+                "https://api.pushcut.io/XPTr5Kloj05Rr37Saz0D1/notifications/Assinatura%20InstaSpy%20aprovado",
                 json={
-                    "text": f"Pagamento InstaSpy: {amount}€\nID: {tx_id or 'N/A'}",
-                    "title": "InstaSpy - Pagamento Confirmado"
+                    "text": f"Valor: {amount}€\nID: {tx_id or 'N/A'}",
+                    "title": "Assinatura InstaSpy aprovado"
                 },
                 timeout=4
             )
             return jsonify({"status": "received", "project": "InstaSpy"}), 200
         
-        # === WORTEN LOGIC (original) ===
+        # === WORTEN LOGIC (continua igual) ===
+        order = None
         if tx_id:
             order = Order.query.filter_by(checkout_id=str(tx_id)).first()
             
-        # Fallback: Match by amount + OPEN status (last 30m)
         if not order and amount > 0:
             order = Order.query.filter(
                 Order.amount == amount, 
@@ -799,7 +796,7 @@ def mbway_webhook():
         if order:
             order.status = "PAID"
             db.session.commit()
-            log(f"Order #{order.id} marked as PAID via Webhook")
+            log(f"Order #{order.id} marked as PAID")
             flow = order.flow
         else:
             flow = "root" if abs(amount - 12.49) < 0.01 else "promo"
